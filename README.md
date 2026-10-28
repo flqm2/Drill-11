@@ -1,6 +1,6 @@
 # Drill-11 — 소년 자동 달리기
 
-`Script/AI_PRD.md`에 따라 기존 대기·수면·달리기 상태에 자동 달리기를 추가한 pico2d 프로젝트이다. 주요 구현은 `Script/main.py`에 있다.
+`prompt/AI_PRD.md`에 따라 기존 대기·수면·달리기 상태에 자동 달리기를 추가한 pico2d 프로젝트이다. 주요 구현은 `Script/main.py`에 있다.
 
 ## 실행
 
