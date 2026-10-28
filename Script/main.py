@@ -65,6 +65,31 @@ class AutoRunState:
         )
 
 
+class AutoRunBoy(Boy):
+    """기존 Boy의 상태와 호출 규약을 유지하면서 자동 달리기를 연결한다."""
+
+    def __init__(self):
+        super().__init__()
+        self.auto_run = AutoRunState(self)
+        self.machine.add_states({
+            'name': 'AUTO_RUN',
+            'on_enter': self.auto_run.enter,
+        })
+        self.machine.add_transition('start_auto_run', 'IDLE', 'AUTO_RUN')
+        self.machine.add_transition(
+            'tick', 'AUTO_RUN', 'IDLE', conditions=self.auto_run.expired,
+        )
+        self.machine.add_transition(
+            'tick', 'AUTO_RUN', None, after=self.auto_run.update,
+        )
+
+    def draw(self):
+        if self.state == 'AUTO_RUN':
+            self.auto_run.draw()
+        else:
+            super().draw()
+
+
 def handle_events():
     global running
 
@@ -87,7 +112,7 @@ def reset_world():
     grass = Grass()
     world.append(grass)
 
-    boy = Boy()
+    boy = AutoRunBoy()
     world.append(boy)
 
 
