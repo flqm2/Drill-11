@@ -34,6 +34,7 @@ class AutoRunState:
         self.last_update = now
         speed = self.boy.RUN_SPEED * self.SPEED_MULTIPLIER
         self.boy.x += self.boy.move_dir * speed * elapsed
+        self.boy.frame = (self.boy.frame + self.boy.RUN_FPS * elapsed) % self.boy.RUN_FRAME_COUNT
 
 
 def handle_events():
