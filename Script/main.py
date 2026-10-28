@@ -3,7 +3,30 @@ from pico2d import *
 from boy import Boy #boy 모듈 이름 , Boy 클래스 이름
 from grass import Grass # grass 모듈 이름 , Grass 클래스 이름
 
-# Game object class here
+class AutoRunState:
+    """자동 달리기의 진입, 갱신, 표시와 종료를 담당하는 개별 상태."""
+
+    DURATION = 5.0
+    SPEED_MULTIPLIER = 2.0
+    SCALE = 1.5
+
+    def __init__(self, boy):
+        self.boy = boy
+        self.started_at = None
+        self.last_update = None
+
+    def enter(self):
+        now = get_time()
+        self.started_at = now
+        self.last_update = now
+        self.boy.move_dir = 1
+        self.boy.face_dir = 1
+        self.boy.frame = 0.0
+        self.boy._pressed_directions.clear()
+
+    def expired(self):
+        return (self.started_at is not None
+                and get_time() - self.started_at >= self.DURATION)
 
 
 def handle_events():
