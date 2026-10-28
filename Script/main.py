@@ -23,6 +23,12 @@ class AutoRunState:
         self.boy.face_dir = 1
         self.boy.frame = 0.0
         self.boy._pressed_directions.clear()
+        left, right = self.horizontal_bounds()
+        self.boy.x = max(left, min(right, self.boy.x))
+
+    def horizontal_bounds(self):
+        half_width = self.boy.FRAME_WIDTH * self.SCALE / 2
+        return half_width, get_canvas_width() - half_width
 
     def expired(self):
         return (self.started_at is not None
@@ -33,7 +39,20 @@ class AutoRunState:
         elapsed = max(0.0, now - self.last_update)
         self.last_update = now
         speed = self.boy.RUN_SPEED * self.SPEED_MULTIPLIER
-        self.boy.x += self.boy.move_dir * speed * elapsed
+        left, right = self.horizontal_bounds()
+        span = right - left
+        # 왕복 거리를 펼쳐 계산하므로 긴 프레임에 벽을 여러 번 만나도 위치를 보존한다.
+        phase = self.boy.x - left
+        if self.boy.move_dir < 0:
+            phase = 2 * span - phase
+        phase = (phase + speed * elapsed) % (2 * span)
+        if phase < span:
+            self.boy.x = left + phase
+            self.boy.move_dir = 1
+        else:
+            self.boy.x = right - (phase - span)
+            self.boy.move_dir = -1
+        self.boy.face_dir = self.boy.move_dir
         self.boy.frame = (self.boy.frame + self.boy.RUN_FPS * elapsed) % self.boy.RUN_FRAME_COUNT
 
     def draw(self):
