@@ -36,6 +36,15 @@ class AutoRunState:
         self.boy.x += self.boy.move_dir * speed * elapsed
         self.boy.frame = (self.boy.frame + self.boy.RUN_FPS * elapsed) % self.boy.RUN_FRAME_COUNT
 
+    def draw(self):
+        boy = self.boy
+        row = 100 if boy.face_dir == 1 else 0
+        boy.image.clip_draw(
+            int(boy.frame) * boy.FRAME_WIDTH, row,
+            boy.FRAME_WIDTH, boy.FRAME_HEIGHT, boy.x, boy.y,
+            boy.FRAME_WIDTH * self.SCALE, boy.FRAME_HEIGHT * self.SCALE,
+        )
+
 
 def handle_events():
     global running
