@@ -76,6 +76,7 @@ class AutoRunBoy(Boy):
             'on_enter': self.auto_run.enter,
         })
         self.machine.add_transition('start_auto_run', 'IDLE', 'AUTO_RUN')
+        self.machine.add_transition('start_run', 'AUTO_RUN', 'RUN')
         self.machine.add_transition(
             'tick', 'AUTO_RUN', 'IDLE', conditions=self.auto_run.expired,
         )
@@ -87,6 +88,13 @@ class AutoRunBoy(Boy):
         if (self.state == 'IDLE'
                 and event.type == SDL_KEYDOWN and event.key == SDLK_a):
             self.start_auto_run()
+            return
+        if self.state == 'AUTO_RUN':
+            if event.type == SDL_KEYDOWN and event.key in (SDLK_LEFT, SDLK_RIGHT):
+                self._pressed_directions[:] = [event.key]
+                self._set_run_direction()
+                self.start_run()
+            # 상하 키, a 재입력과 키 해제는 자동 달리기를 취소하지 않는다.
             return
         super().handle_event(event)
 
@@ -144,6 +152,7 @@ def main():
     try:
         reset_world()
         while running:
+            # 좌우 키 취소를 먼저 적용한 뒤 tick에서 5초 만료 여부를 검사한다.
             handle_events()
             if not running:
                 break
