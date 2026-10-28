@@ -50,13 +50,17 @@ def main():
     global running
     running = True
     open_canvas()
-    reset_world()
-    while running:
-        handle_events()
-        update_world()
-        render_world()
-        delay(0.01)
-    close_canvas()
+    try:
+        reset_world()
+        while running:
+            handle_events()
+            if not running:
+                break
+            update_world()
+            render_world()
+            delay(0.01)
+    finally:
+        close_canvas()
 
 
 if __name__ == '__main__':
