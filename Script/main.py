@@ -83,6 +83,13 @@ class AutoRunBoy(Boy):
             'tick', 'AUTO_RUN', None, after=self.auto_run.update,
         )
 
+    def handle_event(self, event):
+        if (self.state == 'IDLE'
+                and event.type == SDL_KEYDOWN and event.key == SDLK_a):
+            self.start_auto_run()
+            return
+        super().handle_event(event)
+
     def draw(self):
         if self.state == 'AUTO_RUN':
             self.auto_run.draw()
