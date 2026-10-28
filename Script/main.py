@@ -1,5 +1,4 @@
 from pico2d import *
-import random
 
 from boy import Boy #boy 모듈 이름 , Boy 클래스 이름
 from grass import Grass # grass 모듈 이름 , Grass 클래스 이름
@@ -47,15 +46,18 @@ def render_world():
     update_canvas()
 
 
-running = True
+def main():
+    global running
+    running = True
+    open_canvas()
+    reset_world()
+    while running:
+        handle_events()
+        update_world()
+        render_world()
+        delay(0.01)
+    close_canvas()
 
-open_canvas()
-reset_world()
-# game loop
-while running:
-    handle_events()
-    update_world()
-    render_world()
-    delay(0.01)
-# finalization code
-close_canvas()
+
+if __name__ == '__main__':
+    main()
