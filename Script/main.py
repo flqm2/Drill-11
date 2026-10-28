@@ -34,6 +34,11 @@ class AutoRunState:
         return (self.started_at is not None
                 and get_time() - self.started_at >= self.DURATION)
 
+    def exit(self):
+        # 속도·크기는 이 상태에서만 적용하며, 종료할 때 타이머도 해제한다.
+        self.started_at = None
+        self.last_update = None
+
     def update(self):
         now = get_time()
         elapsed = max(0.0, now - self.last_update)
@@ -74,6 +79,7 @@ class AutoRunBoy(Boy):
         self.machine.add_states({
             'name': 'AUTO_RUN',
             'on_enter': self.auto_run.enter,
+            'on_exit': self.auto_run.exit,
         })
         self.machine.add_transition('start_auto_run', 'IDLE', 'AUTO_RUN')
         self.machine.add_transition('start_run', 'AUTO_RUN', 'RUN')
