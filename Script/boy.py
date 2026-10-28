@@ -1,4 +1,5 @@
 from math import pi
+from pathlib import Path
 
 from pico2d import (
     SDL_KEYDOWN, SDL_KEYUP, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE,
@@ -23,7 +24,8 @@ class Boy:
         self.face_dir = 1
         self.move_dir = 0
         self._pressed_directions = []
-        self.image = load_image('animation_sheet.png')
+        image_path = Path(__file__).resolve().parent.parent / 'Resourse' / 'animation_sheet.png'
+        self.image = load_image(str(image_path))
         self.machine = Machine(
             model=self,
             states=[
