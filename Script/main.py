@@ -28,6 +28,13 @@ class AutoRunState:
         return (self.started_at is not None
                 and get_time() - self.started_at >= self.DURATION)
 
+    def update(self):
+        now = get_time()
+        elapsed = max(0.0, now - self.last_update)
+        self.last_update = now
+        speed = self.boy.RUN_SPEED * self.SPEED_MULTIPLIER
+        self.boy.x += self.boy.move_dir * speed * elapsed
+
 
 def handle_events():
     global running
